@@ -291,18 +291,33 @@ int32_t  getbits(const unsigned char* buff, int pos, int len, bool* failure_ptr 
 uint32_t getbituInc(const unsigned char* buff, int& pos, int len);
 int32_t  getbitsInc(const unsigned char* buff, int& pos, int len, bool* failure_ptr = nullptr);
 
-/** Bounds-checked variant of getbituInc().
+/**
+ * @brief Bounds-checked variant of getbituInc().
  * Returns false instead of reading when the requested bit range is outside the
  * supplied buffer bounds. Intended for future decoder hardening paths that need
  * to reject truncated or malformed RTCM payloads safely.
+ * @param buff Pointer to the byte buffer to read from
+ * @param buffBits Size of the buffer in bits
+ * @param pos Bit position from start of data (bits)
+ * @param len Bit length (bits) (len<=32)
+ * @param out Output variable to store the read value
+ * @return True if the read was successful, false if the requested bit range is out of bounds
  */
 [[maybe_unused]] bool
 getbituIncChecked(const unsigned char* buff, int buffBits, int& pos, int len, uint32_t& out);
 
-/** Bounds-checked variant of getbitsInc().
+/**
+ * @brief Bounds-checked variant of getbitsInc().
  * Returns false instead of reading when the requested bit range is outside the
  * supplied buffer bounds. The optional failure pointer is forwarded to the
  * signed extractor when the read is valid.
+ * @param buff Pointer to the byte buffer to read from
+ * @param buffBits Size of the buffer in bits
+ * @param pos Bit position from start of data (bits)
+ * @param len Bit length (bits) (len<=32)
+ * @param out Output variable to store the read value
+ * @param failure_ptr Optional pointer to a boolean that will be set to true if the read value is the invalid sentinel value for the given bit length
+ * @return True if the read was successful, false if the requested bit range is out of bounds
  */
 [[maybe_unused]] bool getbitsIncChecked(
     const unsigned char* buff,
@@ -324,16 +339,29 @@ uint32_t getbituInc(vector<unsigned char>& buff, int& pos, int len);
 
 int32_t getbitsInc(vector<unsigned char>& buff, int& pos, int len, bool* failure_ptr = nullptr);
 
-/** Vector overload of the bounds-checked unsigned incremental bit reader.
+/**
+ * @brief Vector overload of the bounds-checked unsigned incremental bit reader.
  * Uses the vector size to derive the valid bit range before delegating to the
  * raw-buffer implementation.
+ * @param buff Vector of bytes to read from
+ * @param pos Bit position from start of data (bits)
+ * @param len Bit length (bits) (len<=32)
+ * @param out Output variable to store the read value
+ * @return True if the read was successful, false if the requested bit range is out of
  */
 [[maybe_unused]] bool
 getbituIncChecked(vector<unsigned char>& buff, int& pos, int len, uint32_t& out);
 
-/** Vector overload of the bounds-checked signed incremental bit reader.
+/**
+ * @brief Vector overload of the bounds-checked signed incremental bit reader.
  * Uses the vector size to derive the valid bit range before delegating to the
  * raw-buffer implementation.
+ * @param buff Vector of bytes to read from
+ * @param pos Bit position from start of data (bits)
+ * @param len Bit length (bits) (len<=32)
+ * @param out Output variable to store the read value
+ * @param failure_ptr Optional pointer to a boolean that will be set to true if the read value is the invalid sentinel value for the given bit length
+ * @return True if the read was successful, false if the requested bit range is out of bounds
  */
 [[maybe_unused]] bool getbitsIncChecked(
     vector<unsigned char>& buff,

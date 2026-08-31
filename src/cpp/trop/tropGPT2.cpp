@@ -55,16 +55,25 @@ int sign(double x)
     else
         return -1;
 }
-/** vienna mapping function.
+/**
+ * @brief Vienna mapping function.
  * coefficients coming from either GPT2 or from vmf file
+ * @param ah vmf1 dry coefficients
+ * @param aw vmf1 wet coefficients
+ * @param mjd modified julian date
+ * @param lat ellipsoidal lat (rad)
+ * @param hgt height (m)
+ * @param elev zenith distance (rad)
+ * @param dryMap vmf1 dry mapping function
+ * @param wetMap vmf1 wet mapping function
  */
 void vmf1(
-    const double ah,    ///< vmf1 dry coefficients
-    const double aw,    ///< vmf1 wet coefficients
-    double       mjd,   ///< modified julian date
-    double       lat,   ///< ellipsoidal lat (rad)
-    double       hgt,   ///< height (m)
-    double       elev,  ///< zenith distance (rad)
+    const double ah,
+    const double aw,
+    double       mjd,
+    double       lat,
+    double       hgt,
+    double       elev,
     double&      dryMap,
     double&      wetMap
 )

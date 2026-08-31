@@ -208,9 +208,8 @@ constexpr double tamp[nt] = {
 /// @param[in]  ampin  Cartwright-Edden amplitude of tidal constituents
 ///                    (size: nin).
 /// @param[in]  phin   Phase of tidal constituents
+/// @param[in]  epoch  Time of interest in UTC
 /// @param[in]  nin    Number of harmonics used
-/// @param[in]  itm    Date as integer array in UTC. The format should be:
-///                   [year,day_of_year,hours,minutes,seconds].
 /// @param[out] amp    Amplitude due to ocean loading
 /// @param[out] f      Frequency due to ocean loading
 /// @param[out] p      Phase due to ocean loading
@@ -225,7 +224,7 @@ constexpr double tamp[nt] = {
 ///
 /// @version 19.08.2009
 ///
-/// @cite iers2010
+/// Refer to the iers2010
 int iers2010::hisp::admint(const double *ampin, const double *phin,
                           //  dso::datetime<dso::seconds> epoch, double *amp,
                            GTime epoch, double *amp,

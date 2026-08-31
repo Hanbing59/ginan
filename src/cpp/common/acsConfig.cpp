@@ -2008,10 +2008,19 @@ void tryGetKalmanFromYaml(
         }
     }
 }
-
+/**
+ * @brief
+ * @param mappedList
+ * @param commandOpts Command line object to search within
+ * @param yaml
+ * @param key
+ * @param prefix
+ * @param comment
+ * @return true if any values were found, false otherwise
+ */
 bool tryGetMappedList(
     map<string, vector<string>>&           mappedList,
-    boost::program_options::variables_map& commandOpts,  ///< Command line object to search within
+    boost::program_options::variables_map& commandOpts,
     NodeStack&                             yaml,
     const string&                          key,
     const string&                          prefix,

@@ -53,7 +53,7 @@ using std::pair;
  * when a stateTransition() call is used, scaling any process noise according to the time gap since
  * the last stateTransition.
  *
- * $$ K = HPH^\intercal + R $$ fgdfg
+ * \f[ K = HPH^\mathrm{T} + R \f]
  */
 ParallelArchitecture Kalman_Filter__()
 {
@@ -395,10 +395,13 @@ void KFState::setKFTransRate(
     stateTransitionMap[integralKey][rateKey][1] = value;
 }
 
-/** Remove a state from a kalman filter object.
+/**
+ * @brief Removes a state from a kalman filter object.
+ * @param kfKey Key to search for in state
+ * @param allowDeleteParent If true, will also remove any pseudo states that are dependent on this state
  */
 void KFState::removeState(
-    const KFKey& kfKey,  ///< Key to search for in state
+    const KFKey& kfKey,
     bool         allowDeleteParent
 )
 {
@@ -1142,13 +1145,16 @@ void KFState::stateTransition(
     initFilterEpoch(trace);
 }
 
-/** Compare variances of measurements and estimated parameters to detect unreasonable values
- * Ref: to be added
+/**
+ * @brief Compare variances of measurements and estimated parameters to detect unreasonable values
+ * @param callbackDetails Structure containing measurement and trace information
+ * @param Pp Post-fit covariance of parameters
+ * @param statistics Test statistics
  */
 void KFState::leastSquareSigmaChecks(
     RejectCallbackDetails& callbackDetails,
-    MatrixXd&              Pp,         ///< Post-fit covariance of parameters
-    KFStatistics&          statistics  ///< Test statistics
+    MatrixXd&              Pp,
+    KFStatistics&          statistics
 )
 {
     auto& kfMeas = callbackDetails.kfMeas;
@@ -1203,19 +1209,26 @@ void KFState::leastSquareSigmaChecks(
     }
 }
 
-/** Compare variances of measurements and pre-filtered states to detect unreasonable values
+/**
+ * @brief Compare variances of measurements and pre-filtered states to detect unreasonable values
  * Ref: Wang et al. (1997) - On Quality Control in Hydrographic GPS Surveying
  * &  Wieser et al. (2004) - Failure Scenarios to be Considered with Kinematic High Precision
  * Relative GNSS Positioning
  * - http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.573.9628&rep=rep1&type=pdf
+ * @param callbackDetails Structure containing measurement and trace information
+ * @param statistics Test statistics
+ * @param begX Index of first state element to process
+ * @param numX Number of states elements to process
+ * @param begH Index of first measurement to process
+ * @param numH Number of measurements to process
  */
 void KFState::preFitSigmaChecks(
     RejectCallbackDetails& callbackDetails,
-    KFStatistics&          statistics,  ///< Test statistics
-    int                    begX,        ///< Index of first state element to process
-    int                    numX,        ///< Number of states elements to process
-    int                    begH,        ///< Index of first measurement to process
-    int                    numH         ///< Number of measurements to process
+    KFStatistics&          statistics,
+    int                    begX,
+    int                    numX,
+    int                    begH,
+    int                    numH
 )
 {
     auto& trace  = callbackDetails.trace;
@@ -1432,18 +1445,28 @@ void outputResiduals(
     }
 }
 
-/** Compare variances of measurements and filtered states to detect unreasonable values
+/**
+ * @brief Compare variances of measurements and filtered states to detect unreasonable values
+ * @param callbackDetails Structure containing measurement and trace information
+ * @param dx The state innovations from filtering
+ * @param Qinv Inverse of innovation covariance matrix
+ * @param QinvH Qinv*H matrix for omega test
+ * @param statistics Test statistics
+ * @param begX Index of first state element to process
+ * @param numX Number of state elements to process
+ * @param begH Index of first measurement to process
+ * @param numH Number of measurements to process
  */
 void KFState::postFitSigmaChecks(
     RejectCallbackDetails& callbackDetails,
-    VectorXd&              dx,          ///< The state innovations from filtering
-    MatrixXd&              Qinv,        ///< Inverse of innovation covariance matrix
-    MatrixXd&              QinvH,       ///< Qinv*H matrix for omega test
-    KFStatistics&          statistics,  ///< Test statistics
-    int                    begX,        ///< Index of first state element to process
-    int                    numX,        ///< Number of state elements to process
-    int                    begH,        ///< Index of first measurement to process
-    int                    numH         ///< Number of measurements to process
+    VectorXd&              dx,
+    MatrixXd&              Qinv,
+    MatrixXd&              QinvH,
+    KFStatistics&          statistics,
+    int                    begX,
+    int                    numX,
+    int                    begH,
+    int                    numH
 )
 {
     auto& trace  = callbackDetails.trace;
@@ -1647,21 +1670,33 @@ double KFState::innovChiSquare(
     return chiSq;
 }
 
-/** Kalman filter.
+/**
+ * @brief Kalman filter.
+ * @param trace Trace to output to
+ * @param kfMeas Measurements, noise, and design matrices
+ * @param xp Post-update state vector
+ * @param Pp Post-update covariance of states
+ * @param dx Post-update state innovation
+ * @param Qinv Inverse of innovation covariance matrix
+ * @param QinvH Qinv*H matrix for omega test
+ * @param begX Index of first state element to process
+ * @param numX Number of state elements to process
+ * @param begH Index of first measurement to process
+ * @param numH Number of measurements to process
+ * @param resetOnFailure Whether to reset the filter on failure
  */
 bool KFState::kFilter(
-    Trace&    trace,   ///< Trace to output to
-    KFMeas&   kfMeas,  ///< Measurements, noise, and design matrices
-    VectorXd& xp,      ///< Post-update state vector
-    MatrixXd& Pp,      ///< Post-update covariance of states
-    VectorXd&
-              dx,    ///< Post-update state innovation	 // Eugene: change name to avoid interference
-    MatrixXd& Qinv,  ///< Inverse of innovation covariance matrix
-    MatrixXd& QinvH,  ///< Qinv*H matrix for omega test
-    int       begX,   ///< Index of first state element to process
-    int       numX,   ///< Number of state elements to process
-    int       begH,   ///< Index of first measurement to process
-    int       numH,   ///< Number of measurements to process
+    Trace&    trace,
+    KFMeas&   kfMeas,
+    VectorXd& xp,
+    MatrixXd& Pp,
+    VectorXd& dx,
+    MatrixXd& Qinv,
+    MatrixXd& QinvH,
+    int       begX,
+    int       numX,
+    int       begH,
+    int       numH,
     bool      resetOnFailure
 )
 {

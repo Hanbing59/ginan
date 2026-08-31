@@ -575,18 +575,31 @@ double mwnoise(
     return SQRT(a * SQR(sigcode) + b * SQR(sigphase));
 }
 
-/** Single channel detection–identification–adaptation (DIA) for integer cycle slips
+/**
+ * @brief Single channel detection–identification–adaptation (DIA) for integer cycle slips
+ * @param trace Trace to output to
+ * @param satStat Persistant satellite status parameters
+ * @param lc Linear combinations
+ * @param obs Observation context for diagnostics
+ * @param lam Signal wavelength map
+ * @param sigmaPhase Phase noise
+ * @param sigmaCode Code noise
+ * @param nf Number of frequencies
+ * @param filterMode LSQ/Kalman filter flag
+ * @param frq1 First frequency
+ * @param frq2 Second frequency
+ * @param frq3 Third frequency
  */
 void scdia(
-    Trace&            trace,       ///< Trace to output to
-    SatStat&          satStat,     ///< Persistant satellite status parameters
-    lc_t&             lc,          ///< Linear combinations
-    const GObs&       obs,         ///< Observation context for diagnostics
-    map<int, double>& lam,         ///< Signal wavelength map
-    double            sigmaPhase,  ///< Phase noise
-    double            sigmaCode,   ///< Code noise
-    int               nf,          ///< Number of frequencies
-    E_FilterMode      filterMode,  ///< LSQ/Kalman filter flag
+    Trace&            trace,
+    SatStat&          satStat,
+    lc_t&             lc,
+    const GObs&       obs,
+    map<int, double>& lam,
+    double            sigmaPhase,
+    double            sigmaCode,
+    int               nf,
+    E_FilterMode      filterMode,
     E_FType           frq1,
     E_FType           frq2,
     E_FType           frq3

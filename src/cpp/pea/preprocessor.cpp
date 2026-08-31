@@ -755,8 +755,8 @@ void preprocessor(
     Trace&    trace,
     Receiver& rec,
     bool      realEpoch,
-    KFState*  kfState_ptr,  ///< Optional pointer to filter to take ephemerides from
-    KFState*  remote_ptr    ///< Optional pointer to filter to take ephemerides from
+    KFState*  kfState_ptr,
+    KFState*  remote_ptr
 )
 {
     DOCS_REFERENCE(Preprocessing__);

@@ -31,14 +31,22 @@ double getWaterVapPressure(
     return saturationVaporPressureHpa * humidity;
 }
 
-/** Calculate trop delay on SLR observation
+/**
+ * @brief Calculate trop delay on SLR observation
+ * @param obs SLR observation
+ * @param pos Receiver position
+ * @param azel Azimuth/Elevation of sat (azimuth for future use)
+ * @param tropStates (gradients for future use)
+ * @param dTropDx (gradients for future use)
+ * @param var Variance of trop delay
+ * @return Trop delay (m)
  */
 double laserTropDelay(
-    LObs&        obs,         ///< SLR observation
-    VectorPos&   pos,         ///< Receiver position
-    AzEl&        azel,        ///< Azimuth/Elevation of sat (azimuth for future use)
-    TropStates&  tropStates,  ///< (gradients for future use)
-    TropMapping& dTropDx,     ///< (gradients for future use)
+    LObs&        obs,
+    VectorPos&   pos,
+    AzEl&        azel,
+    TropStates&  tropStates,
+    TropMapping& dTropDx,
     double&      var
 )
 {

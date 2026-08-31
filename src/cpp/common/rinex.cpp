@@ -77,9 +77,9 @@ void setstr(char* dst, const char* src, int n)
         *p-- = '\0';
 }
 
-/** Strip trailing carriage return (\r) from string if present
- * This handles Windows-encoded files (\r\n line endings) where std::getline
- * removes only the \n but leaves the \r in the string.
+/** Strip trailing carriage return ("\r") from string if present
+ * This handles Windows-encoded files ("\r\n" line endings) where std::getline
+ * removes only the \n but leaves the "\r" in the string.
  */
 inline void stripCarriageReturn(string& line)
 {
@@ -2310,29 +2310,6 @@ int readRnx(
 
 // Helper functions for common RINEX observation processing (SRP compliance)
 
-/**
- * @brief Parse observation values from RINEX formatted text
- *
- * Extracts numerical observation value and Loss of Lock Indicator from
- * a RINEX formatted line at the specified position. Includes comprehensive
- * bounds checking and error handling for malformed input data.
- *
- * RINEX observation format:
- * - 14 characters: observation value (right-justified, decimal point optional)
- * - 1 character: Loss of Lock Indicator (0-3)
- * - 1 character: Signal strength (optional, not currently processed)
- *
- * @param buff Character buffer containing RINEX observation line
- * @param position Starting position in buffer (0-based index)
- *
- * @return ObservationValues Structure containing parsed value and LLI
- *         Returns zeros if parsing fails or position is out of bounds
- *
- * @note Includes debug output for development/troubleshooting
- * @note LLI bits are masked to extract only relevant flags (bits 0-1)
- *
- * @warning Function assumes RINEX standard 16-character field width
- */
 ObservationValues parseObservationValues(char* buff, int position)
 {
     ObservationValues result;
@@ -2354,27 +2331,6 @@ ObservationValues parseObservationValues(char* buff, int position)
     return result;
 }
 
-/**
- * @brief Assign parsed values to appropriate RawSig fields
- *
- * Routes observation values to the correct field in a RawSig structure
- * based on the observation type character. Implements type-safe assignment
- * with validation to prevent data corruption.
- *
- * Observation type mapping:
- * - 'C', 'P': Pseudorange/code observations -> signal.P
- * - 'L': Carrier phase observations -> signal.L (with LLI)
- * - 'D': Doppler observations -> signal.D
- * - 'S': Signal-to-noise ratio -> signal.snr
- *
- * @param signal Reference to RawSig structure to modify
- * @param observationType Single character observation type identifier
- * @param value Numerical observation value to assign
- * @param lli Loss of Lock Indicator (only used for phase observations)
- *
- * @note Only assigns non-zero values to prevent overwriting existing data
- * @note LLI is only assigned for phase ('L') observations
- */
 void assignObservationValue(RawSig& signal, char observationType, double value, double lli)
 {
     if (value)  // Only assign if value is valid (non-zero)
@@ -2399,32 +2355,6 @@ void assignObservationValue(RawSig& signal, char observationType, double value, 
     }
 }
 
-/**
- * @brief Stage observation for later processing and validation
- *
- * Adds an observation to the staging area with complete metadata for later
- * processing. Used for observations that can be immediately resolved without
- * requiring priority-based selection logic.
- *
- * The staging pattern provides several benefits:
- * - Deferred processing allows validation before commitment
- * - Conflict detection and resolution
- * - Consistent handling of all observation types
- * - Enhanced debugging and logging capabilities
- *
- * @param staging Reference to staging container map
- * @param obsType Single character observation type ('C', 'L', 'P', 'D', 'S')
- * @param obsCode Resolved RINEX 3 observation code (e.g., L1C, C1W)
- * @param frequency Frequency type enumeration (F1, F2, F5, etc.)
- * @param value Numerical observation value
- * @param lli Loss of Lock Indicator (0-3)
- *
- * @note Creates composite key from obsType + frequency + obsCode for uniqueness
- * @note Logs staging operation for debugging purposes
- *
- * @see stagePhaseObservation() for priority-based phase observations
- * @see ObservationKey for key structure details
- */
 void stageObservation(
     ObservationStaging& staging,
     char                obsType,
@@ -2450,32 +2380,6 @@ void stageObservation(
                              << " value=" << value;
 }
 
-/**
- * @brief Stage phase observation with priority resolution support
- *
- * Stages a phase observation that requires priority-based code resolution.
- * Unlike regular observations, phase observations in RINEX 2 can map to
- * multiple possible RINEX 3 codes, requiring selection based on available
- * code observations.
- *
- * Priority resolution example:
- * - Configuration: L1 -> [L1W, L1C] (try L1W first, then L1C)
- * - If P1 has data -> L1W is available -> use L1W for L1 phase
- * - If P1 is zero but C1 has data -> use L1C for L1 phase
- *
- * @param staging Reference to staging container map
- * @param obsType Single character observation type (typically 'L')
- * @param priorityCodes Vector of observation codes in priority order
- * @param frequency Frequency type enumeration
- * @param value Numerical phase observation value
- * @param lli Loss of Lock Indicator
- *
- * @note Resolution occurs during commitStagedObservations() when code data is available
- * @note Uses first priority code as temporary key for staging
- * @note Logs priority array for debugging purposes
- *
- * @see commitStagedObservations() for priority resolution implementation
- */
 void stagePhaseObservation(
     ObservationStaging&      staging,
     char                     obsType,
@@ -2520,34 +2424,6 @@ void stagePhaseObservation(
                              << " value=" << value;
 }
 
-/**
- * @brief Commit staged observations with phase priority resolution
- *
- * Processes all staged observations and transfers them to the final GObs
- * structure. Implements sophisticated two-pass algorithm for phase observation
- * priority resolution:
- *
- * Pass 1: Commit code observations and track available codes
- * - Process all non-phase observations (C, P, D, S types)
- * - Build set of available observation codes
- * - Create RawSig entries in appropriate frequency lists
- *
- * Pass 2: Resolve and commit phase observations
- * - For each phase observation with priority array
- * - Find first available code from priority list
- * - Fallback to first priority if none available
- * - Commit resolved phase observation
- *
- * @param staging Container of staged observations to process
- * @param obs Reference to output GObs structure to populate
- * @param codeMap RINEX 2->3 code conversion map (for reference, not used in current impl)
- *
- * @note Phase resolution depends on code observations being processed first
- * @note Extensive debug logging for troubleshooting priority resolution
- * @note Creates RawSig entries using findOrCreateSignal() helper
- *
- * @see findOrCreateSignal(), assignObservationValue()
- */
 void commitStagedObservations(
     const ObservationStaging&         staging,
     GObs&                             obs,

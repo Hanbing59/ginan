@@ -15,7 +15,7 @@ using iers2010::hisp::ntin;
 ///                coefficients will be read in here (aka the amplitudes)
 /// @param[in] tph  Matrix of size 3xNTIN; lines 4 to 6 will be read in here
 ///                (aka the phase coefficients)
-/// @filename       The filename of the BLQ file to be read in; if none is
+/// @param[in] filename The filename of the BLQ file to be read in; if none is
 /// given,
 ///                then the function expects to read in from STDIN
 /// @return         Anything other than 0 denotes an error
@@ -77,12 +77,14 @@ int iers2010::hisp::read_hardisp_args(double tamp[3][ntin], double tph[3][ntin],
 ///          http://maia.usno.navy.mil/conv2010/software.html
 /// @param[in] irnt Number of output samples (of samp seconds)
 /// @param[in] samp Sample time interval in seconds
-/// @param[out] du Array of size irnt; at output holds the values of radial
+/// @param[in] tamp Matrix of size 3xNTIN
+/// @param[in] tph  Matrix of size 3xNTIN
+/// @param[in] epoch The epoch to start the time series at
+/// @param[out] odu Array of size irnt; at output holds the values of radial
 ///                tidal ocean loading displacement
-/// @param[out] dw Array of size irnt; at output holds the values of west
+/// @param[out] ods Array of size irnt; at output holds the values of south
 ///                tidal ocean loading displacement
-/// @param[out] ds Array of size irnt; at output holds the values of south
-///                tidal ocean loading displacement
+/// @param[out] odw Array of size irnt; at output holds the values of west
 /// @return        An integer denoting the exit status:
 ///                Returned Value  | Function Status
 ///                ----------------|-------------------------------------
@@ -120,7 +122,7 @@ int iers2010::hisp::read_hardisp_args(double tamp[3][ntin], double tph[3][ntin],
 ///
 /// @version 19.12.2016
 ///
-/// @cite iers2010
+/// Refer to the iers2010
 int iers2010::hisp::hardisp_impl(int irnt, double samp, double tamp[3][ntin],
                                  double tph[3][ntin],
                                 //  dso::datetime<dso::seconds> epoch, double *odu,

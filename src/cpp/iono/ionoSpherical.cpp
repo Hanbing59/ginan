@@ -159,19 +159,21 @@ bool ippCheckSphhar(GTime time, VectorPos& ionPP)
     return true;
 }
 
-/** Evaluates spherical harmonics basis functions
-    int ind			I
-    obs				I		Ionosphere measurement struct
-        latIPP				- Latitude of Ionosphere Piercing Point
-        lonIPP				- Longitude of Ionosphere Piercing Point
-        angIPP				- Angular gain for Ionosphere Piercing Point
-    int slant		I		0: coefficient for VTEC, 1: coefficient for STEC
-----------------------------------------------------------------------------*/
+/**
+ * @brief Evaluates spherical harmonics basis functions
+ * @param trace Trace object for logging
+ * @param ind Basis function number
+ * @param obs Ionospheric observation metadata:
+ *        latIPP, Latitude of Ionosphere Piercing Point
+ *        lonIPP, Longitude of Ionosphere Piercing Point
+ *        angIPP, Angular gain for Ionosphere Piercing Point
+ * @param slant apply slant factor, false: coefficient for VTEC, true: coefficient for STEC
+ */
 double ionCoefSphhar(
     Trace&   trace,
-    int      ind,   ///< Basis function number
-    IonoObs& obs,   ///< Ionospheric observation metadata
-    bool     slant  ///< apply slant factor, false: coefficient for VTEC, true: coefficient for STEC
+    int      ind,
+    IonoObs& obs,
+    bool     slant
 )
 {
     if (ind >= sphBasisMap.size())

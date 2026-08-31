@@ -24,7 +24,7 @@
 ///
 /// @version 13.08.2009
 ///
-/// @cite iers2010
+/// Refer to the iers2010
 /// Mendes, V.B., G. Prates, E.C. Pavlis, D.E. Pavlis,
 /// and R.B. Langley (2002). "Improved mapping functions for
 /// atmospheric refraction correction in SLR", Geophysical

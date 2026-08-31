@@ -1593,10 +1593,19 @@ bool preciseAttitude(
     return true;
 }
 
+/**
+ * @brief Calculates receiver attitude using Kalman filter state
+ *
+ * @param id Satellite/receiver ID
+ * @param time Solution time
+ * @param attStatus Attitude status
+ * @param kfState_ptr Pointer to Kalman filter state
+ * @return true if attitude successfully calculated, false otherwise
+ */
 bool kalmanAttitude(
-    string         id,         ///< Satellite/receiver ID
-    GTime          time,       ///< Solution time
-    AttStatus&     attStatus,  ///< Attitude status
+    string         id,
+    GTime          time,
+    AttStatus&     attStatus,
     const KFState* kfState_ptr
 )
 {
@@ -1774,12 +1783,18 @@ bool basicRecAttitude(
     return true;
 }
 
-/** Attitude of receiver
+/**
+ * @brief Attitude of receiver
+ * @param rec Receiver
+ * @param time Time
+ * @param attitudeTypes Attitude type
+ * @param kfState_ptr Pointer to Kalman filter state
+ * @param remote_ptr Pointer to remote Kalman filter state
  */
 void recAtt(
-    Receiver&        rec,            ///< Receiver
-    GTime            time,           ///< Time
-    vector<E_Source> attitudeTypes,  ///< Attitude type
+    Receiver&        rec,
+    GTime            time,
+    vector<E_Source> attitudeTypes,
     const KFState*   kfState_ptr,
     const KFState*   remote_ptr
 )

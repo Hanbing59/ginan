@@ -239,11 +239,16 @@ VectorEcef body2ecef(
     return ecef;
 }
 
-/** transform vector in ecef frame to body
+/**
+ * @brief transform vector in ecef frame to body
+ * @param attStatus attitude (unit vectors of the axes of body frame) in ecef frame
+ * @param ecef vector in ecef frame
+ * @param dEdQ_ptr optional pointer to a matrix to store the derivative of the ecef vector with respect to the quaternion representing the body orientation
+ * @return vector in body frame
  */
 Vector3d ecef2body(
-    AttStatus&  attStatus,  ///< attitude (unit vectors of the axes of body frame) in ecef frame
-    VectorEcef& ecef,       ///< vector in ecef frame
+    AttStatus&  attStatus,
+    VectorEcef& ecef,
     MatrixXd*   dEdQ_ptr
 )
 {

@@ -2427,10 +2427,10 @@ int32_t getbitsInc(
 }
 
 bool getbituIncChecked(
-    const unsigned char* buff,  ///< byte data
+    const unsigned char* buff,
     int                  buffBits,
-    int&                 pos,   ///< bit position from start of data (bits)
-    int                  len,   ///< bit length (bits) (len<=32)
+    int&                 pos,
+    int                  len,
     uint32_t&            out
 )
 {
@@ -2444,12 +2444,12 @@ bool getbituIncChecked(
 }
 
 bool getbitsIncChecked(
-    const unsigned char* buff,        ///< byte data
+    const unsigned char* buff,
     int                  buffBits,
-    int&                 pos,         ///< bit position from start of data (bits)
-    int                  len,         ///< bit length (bits) (len<=32)
+    int&                 pos,
+    int                  len,
     int32_t&             out,
-    bool*                failure_ptr  ///< pointer for failure flag
+    bool*                failure_ptr
 )
 {
     if (len <= 0 || len > 32 || pos < 0 || pos + len > buffBits)
@@ -2474,9 +2474,9 @@ int32_t getbitsInc(
 }
 
 bool getbituIncChecked(
-    vector<unsigned char>& buff,  ///< byte data
-    int&                   pos,   ///< bit position from start of data (bits)
-    int                    len,   ///< bit length (bits) (len<=32)
+    vector<unsigned char>& buff,
+    int&                   pos,
+    int                    len,
     uint32_t&              out
 )
 {
@@ -2484,11 +2484,11 @@ bool getbituIncChecked(
 }
 
 bool getbitsIncChecked(
-    vector<unsigned char>& buff,        ///< byte data
-    int&                   pos,         ///< bit position from start of data (bits)
-    int                    len,         ///< bit length (bits) (len<=32)
+    vector<unsigned char>& buff,
+    int&                   pos,
+    int                    len,
     int32_t&               out,
-    bool*                  failure_ptr  ///< pointer for failure flag
+    bool*                  failure_ptr
 )
 {
     return getbitsIncChecked(buff.data(), (int)buff.size() * 8, pos, len, out, failure_ptr);

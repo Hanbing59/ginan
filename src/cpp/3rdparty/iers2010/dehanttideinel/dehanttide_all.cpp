@@ -448,7 +448,7 @@ Eigen::Matrix<double, 3, 1> st1idiu(const TideAux &aux) noexcept {
 /// @param[in] angles An instance of type Step2Angles where all relevant
 ///            angles/variables to be used are store, for the passed in
 ///            datetime
-/// @return xcorsta In phase and out of phase station corrections
+/// @return In phase and out of phase station corrections
 ///            for diurnal band
 ///
 /// @note This fucnction is part of the package dehanttideinel, see
@@ -519,8 +519,8 @@ Eigen::Matrix<double, 3, 1> step2diu(const Step2Angles &angles,
 /// @param[in] angles An instance of type Step2Angles where all relevant
 ///            angles/variables to be used are store, for the passed in
 ///            datetime
-/// @param[out] xcorsta In phase and out of phase station corrections
-///            for diurnal band
+/// @return In phase and out of phase station corrections
+///            for long period band
 ///
 /// @note This fucnction is part of the package dehanttideinel, see
 ///       ftp://maia.usno.navy.mil/conv2010/convupdt/chapter7/dehanttideinel/
@@ -599,10 +599,12 @@ Eigen::Matrix<double, 3, 1> step2lon(const Step2Angles &angles,
 ///          DEHANTTIDEINEL subroutine, found here :
 ///          http://maia.usno.navy.mil/conv2010/software.html
 ///
-/// @param[in]  xsta   Geocentric position of the station (Note 1)
+/// @param[in]  julian_centuries_tt  Julian centuries in TT time scale (Note 4)
+/// @param[in]  fhr_ut  Fractional hour in UT1 time scale (Note 4)
 /// @param[in]  xsun   Geocentric position of the Sun (Note 2)
 /// @param[in]  xmon   Geocentric position of the Moon (Note 2)
-/// @param[in]  t      Datetime in TT
+/// @param[in]  xsta_vec  Geocentric position of the station (Note 1)
+/// @param[out] xcor_vec  Geocentric displacement vector of the station
 /// @return dxtide Displacement vector (Note 3)
 /// @return            Always 0.
 ///
@@ -622,7 +624,7 @@ Eigen::Matrix<double, 3, 1> step2lon(const Step2Angles &angles,
 ///
 /// @version 19.12.2016
 ///
-/// @cite iers2010,
+/// Refer to the iers2010,
 ///
 ///     Groten, E., 2000, Geodesists Handbook 2000, Part 4,
 ///     http://www.gfy.ku.dk/~iag/HB2000/part4/groten.htm. See also

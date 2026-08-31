@@ -38,12 +38,21 @@ struct smoothControl
 };
 map<SatSys, map<string, smoothControl>> smoothedMeasMap;
 
-/** Carrier-smoothing of code pseudoranges
+/**
+ * @brief Carrier-smoothing of code pseudoranges
  * Ref: https://gssc.esa.int/navipedia/index.php/Carrier-smoothing_of_code_pseudoranges (eq (2))
+ * @param trace Trace file to output to
+ * @param obs Observation to calculate pseudorange for
+ * @param meaP Code measurement
+ * @param meaL Carrier measurement
+ * @param varP Code measurement variance
+ * @param varL Carrier measurement variance
+ * @param update If true, will update the smoothing filter with the new measurements
+ * @param LLI If true, will reset the smoothing filter
  */
 bool smoothedPsudo(
     Trace&  trace,
-    GObs&   obs,  ///< Observation to calculate pseudorange for
+    GObs&   obs,
     double& meaP,
     double  meaL,
     double& varP,
@@ -966,15 +975,22 @@ E_Solution estpos(
     return E_Solution::FAILED;
 }
 
-/** Receiver autonomous integrity monitoring (RAIM) failure detection and exclution
- * Note: This is a simplified version of RAIM algorithm that tries to exclude multiple outliers
+/**
+ * @brief Receiver autonomous integrity monitoring (RAIM) failure detection and exclusion
+ * @param trace Trace file to output to
+ * @param obsList List of observations for this epoch
+ * @param sol Solution object containing initial conditions and results
+ * @param id Id of receiver
+ * @param kfState_ptr Optional pointer to KFState object for PPP values
+ * @return True if RAIM passed, false if RAIM failed
+ * @note This is a simplified version of RAIM algorithm that tries to exclude multiple outliers
  * iteratively instead of checking all possible subsets when more than one outliers present
  */
 bool raim(
-    Trace&    trace,    ///< Trace file to output to
-    ObsList&  obsList,  ///< List of observations for this epoch
-    Solution& sol,      ///< Solution object containing initial conditions and results
-    string    id,       ///< Id of receiver
+    Trace&    trace,
+    ObsList&  obsList,
+    Solution& sol,
+    string    id,
     KFState*  kfState_ptr = nullptr
 )
 {

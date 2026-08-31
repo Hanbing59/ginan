@@ -218,12 +218,16 @@ double ionCoefPolynomial(Trace& trace, SSRAtmRegion& atmReg, double latDeg, doub
     }
 }
 
-/** calcuates the partials of observations with respect to basis functions
+/**
+ * @brief Calculates the partials of observations with respect to basis functions
+ * @param trace Trace object for logging
+ * @param ind Basis function number
+ * @param obs Metadata containing piercing points
  */
 double ionCoefLocal(
     Trace&   trace,
-    int      ind,  ///< Basis function number
-    IonoObs& obs   ///< Metadata containing piercing points
+    int      ind,
+    IonoObs& obs
 )
 {
     if (ind >= localBasisVec.size())
