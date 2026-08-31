@@ -1,0 +1,19 @@
+# vcpkg installed packages
+/vcpkg_installed/
+
+# Build directories
+/src/build/
+
+# Build outputs
+/bin/
+/lib/
+
+# Generated source documentation directory
+/Docs/codeDocs/
+
+# Generated documentation/configuration
+/Docs/defaultConfiguration.md
+
+# # Generated version headers
+/src/cpp/pea/peaCommitVersion.h
+/src/cpp/pea/peaLibVersion.h
