@@ -14,6 +14,6 @@
 # Generated documentation/configuration
 /Docs/defaultConfiguration.md
 
-# # Generated version headers
+# Generated version headers
 /src/cpp/pea/peaCommitVersion.h
 /src/cpp/pea/peaLibVersion.h
