@@ -1,4 +1,62 @@
 #!/usr/bin/env bash
+
+# CI compatibility-build helper for Eigen 3.4 and Eigen 5.
+#
+# This script builds the project for two target platforms (Linux and
+# Windows cross-compilation) against two Eigen versions, resulting in
+# a 2x2 compatibility matrix:
+#
+#   Linux          + Eigen 3.4
+#   Linux          + Eigen 5
+#   Windows-cross  + Eigen 3.4
+#   Windows-cross  + Eigen 5
+#
+# The script creates an isolated vcpkg manifest, install tree, binary
+# cache, and CMake build directory for each platform/Eigen combination
+# to avoid cross-contamination between configurations.
+#
+# It is intended as a CI/compatibility-build helper rather than the
+# main project build script. The script uses BITBUCKET_CLONE_DIR, so it
+# was originally designed for a Bitbucket Pipelines environment.
+#
+# The script is not technically tied to Bitbucket. To use it from
+# GitHub Actions, the simplest approach is to provide the equivalent
+# repository-root variable before invoking the script:
+#
+#   export BITBUCKET_CLONE_DIR="${GITHUB_WORKSPACE}"
+#
+# Alternatively, BITBUCKET_CLONE_DIR can be replaced throughout this
+# script with GITHUB_WORKSPACE. No other part of the script depends on
+# Bitbucket-specific functionality.
+#
+# Example GitHub Actions usage:
+#
+#   - name: Build Eigen compatibility matrix
+#     run: |
+#       export BITBUCKET_CLONE_DIR="${GITHUB_WORKSPACE}"
+#       ./scripts/ci/compile_vcpkg_eigen_matrix.sh linux 3.4
+#
+# To test the complete 2x2 matrix in GitHub Actions, the workflow can
+# use a matrix such as:
+#
+#   strategy:
+#     matrix:
+#       target_platform: [linux, windows-cross]
+#       eigen_lane: ["3.4", "5"]
+#
+# and invoke:
+#
+#   ./scripts/ci/compile_vcpkg_eigen_matrix.sh \
+#     "${{ matrix.target_platform }}" \
+#     "${{ matrix.eigen_lane }}"
+#
+# Note that the GitHub Actions workflow currently used by the project
+# does not invoke this script directly. This script should therefore be
+# considered a standalone Eigen compatibility-build helper unless it is
+# explicitly integrated into a CI workflow.
+#
+# Usage:
+#   ./compile_vcpkg_eigen_matrix.sh <linux|windows-cross> <3.4|5>
 set -euo pipefail
 
 if [ "$#" -ne 2 ]; then

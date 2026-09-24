@@ -17,3 +17,8 @@
 # Generated version headers
 /src/cpp/pea/peaCommitVersion.h
 /src/cpp/pea/peaLibVersion.h
+
+# Python virtual environment
+.venv/
+
+__pycache__/

@@ -1,0 +1,177 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Clean ginan builds",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/bin/true",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "preLaunchTask": "clean-ginan-build"
+        },
+        {
+            "name": "Build ginan (debug)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/bin/true",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "preLaunchTask": "cmake-build-ginan-debug"
+        },
+        {
+            "name": "Build ginan (release)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/bin/true",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "preLaunchTask": "cmake-build-ginan-release"
+        },
+        {
+            "name": "Debug pea (without build)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/pea",
+            "args": [
+                "${input:peaOptions}"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${input:peaRunDir}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "setupCommands": [
+                {
+                    "description": "Clear debuginfod URLs",
+                    "text": "set debuginfod urls ",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Pretty print complex values",
+                    "text": "-gdb-set print pretty on",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Show dynamic object types",
+                    "text": "-gdb-set print object on",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Do not truncate container elements",
+                    "text": "-gdb-set print elements 0",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "Debug pea (build first)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/pea",
+            "args": [
+                "${input:peaOptions}"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${input:peaRunDir}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "setupCommands": [
+                {
+                    "description": "Clear debuginfod URLs",
+                    "text": "set debuginfod urls ",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Pretty print complex values",
+                    "text": "-gdb-set print pretty on",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Show dynamic object types",
+                    "text": "-gdb-set print object on",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Do not truncate container elements",
+                    "text": "-gdb-set print elements 0",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "cmake-build-ginan-debug"
+        },
+        {
+            "name": "Run pea (without build)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/pea",
+            "args": [
+                "${input:peaOptions}"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${input:peaRunDir}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
+            "name": "Run pea (build first)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/pea",
+            "args": [
+                "${input:peaOptions}"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${input:peaRunDir}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "preLaunchTask": "cmake-build-ginan-release"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "peaOptions",
+            "type": "promptString",
+            "description": "List of options for pea",
+            "default": "--help"
+        },
+        {
+            "id": "peaRunDir",
+            "type": "promptString",
+            "description": "Directory to run pea in",
+            "default": "${workspaceFolder}"
+        }
+    ]
+}

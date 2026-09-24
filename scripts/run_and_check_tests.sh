@@ -38,26 +38,22 @@ do
 	FAILURE=$TEST.out
 
 	if ! test -f "$FAILURE"; then
-		# echo $FAILURE not found, continuing
 		continue
 	fi
 
-	# echo $FAILURE
 	#slice up test name
 	FILENAME=${FAILURE##*/}
 	REMAINDER=${FILENAME%.*}
-	REMAINDER=${REMAINDER%.*}
 
+	REMAINDER=${REMAINDER%.*}
 	PART1=${REMAINDER%%.*}
 	# echo $PART1
 
 	REMAINDER=${REMAINDER#*.}
-
 	PART2=${REMAINDER%%.*}
 	# echo $PART2
 
 	REMAINDER=${REMAINDER#*.}
-
 	PART3=${REMAINDER%%.*}
 	# echo $PART3
 
@@ -66,7 +62,6 @@ do
 
 	rm $FAILURE
 done
-
 echo "</testsuite></testsuites>" >> $RESULTSXML
 
 echo Results written to JUnit XML : $RESULTSXML

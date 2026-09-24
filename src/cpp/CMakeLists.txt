@@ -213,27 +213,16 @@ if(ENABLE_MONGODB)
 	)
 endif()
 
-
 #==================================================
 # Ocean tide loading
 if (NetCDF_FOUND)
-	add_library(otl
-			STATIC
-			loading/loading.cpp
-			loading/tide.cpp
-			loading/utils.cpp
-			loading/load_functions.cpp
-			loading/loadgrid.cpp
-			)
-
-	add_executable(make_otl_blq
-			loading/make_otl_blq.cpp
-			)
-
-
-	add_executable(interpolate_loading
-			loading/interpolate_loading.cpp
-			)
+	add_library(otl STATIC loading/loading.cpp
+			               loading/tide.cpp
+			               loading/utils.cpp
+			               loading/load_functions.cpp
+			               loading/loadgrid.cpp)
+	add_executable(make_otl_blq loading/make_otl_blq.cpp)
+	add_executable(interpolate_loading loading/interpolate_loading.cpp)
 
 	# Use modern CMake targets if available from vcpkg, otherwise use legacy variables
 	if (TARGET netCDF::netcdf-cxx4 AND TARGET netCDF::netcdf)
@@ -345,8 +334,6 @@ if(GINAN_BLAS_LIBRARIES_LOWER MATCHES "openblas")
 	target_compile_definitions(pea PRIVATE GINAN_USE_OPENBLAS=1)
 endif()
 
-
-
 target_link_libraries(pea PUBLIC
 						sofa_lib
 						${Boost_LIBRARIES}
@@ -388,13 +375,8 @@ set_property(TARGET pea PROPERTY POSITION_INDEPENDENT_CODE FALSE)
 
 add_custom_target(peas)
 
-add_dependencies(peas
-					pea
-					)
-
+add_dependencies(peas pea)
 
 if(BUILD_DOC)
-add_dependencies(peas
-					docs
-					)
+	add_dependencies(peas docs)
 endif()

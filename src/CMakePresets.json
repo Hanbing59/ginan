@@ -9,6 +9,7 @@
     {
       "name": "vcpkg-base",
       "hidden": true,
+      "description": "Base configure preset using vcpkg",
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
@@ -19,6 +20,7 @@
     {
       "name": "linux-base",
       "hidden": true,
+      "description": "Base configure preset using vcpkg for Linux x64",
       "inherits": "vcpkg-base",
       "condition": {
         "type": "equals",
@@ -31,8 +33,41 @@
       }
     },
     {
+      "name": "release",
+      "displayName": "Release",
+      "description": "Release build using vcpkg for Linux x64",
+      "binaryDir": "${sourceDir}/build/linux-Release",
+      "inherits": ["linux-base"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_DOC": "ON"
+      }
+    },
+    {
+      "name": "debug",
+      "displayName": "Debug",
+      "description": "Debug build using vcpkg for Linux x64",
+      "binaryDir": "${sourceDir}/build/linux-Debug",
+      "inherits": ["linux-base"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BUILD_DOC": "ON"
+      }
+    },
+    {
+      "name": "relwithdebinfo",
+      "displayName": "RelWithDebInfo",
+      "description": "Optimized build with debug symbols for profiling for Linux x64",
+      "binaryDir": "${sourceDir}/build/linux-RelWithDebInfo",
+      "inherits": ["linux-base"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
       "name": "windows-base",
       "hidden": true,
+      "description": "Base configure preset using vcpkg for Windows x64",
       "inherits": "vcpkg-base",
       "condition": {
         "type": "equals",
@@ -45,8 +80,31 @@
       }
     },
     {
+      "name": "windows-release",
+      "displayName": "Windows Release",
+      "description": "Release build using vcpkg for Windows x64",
+      "binaryDir": "${sourceDir}/build/windows-Release",
+      "inherits": ["windows-base"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_EXE_LINKER_FLAGS": "-static"
+      }
+    },
+    {
+      "name": "windows-debug",
+      "displayName": "Windows Debug",
+      "description": "Debug build using vcpkg for Windows x64",
+      "binaryDir": "${sourceDir}/build/windows-Debug",
+      "inherits": ["windows-base"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXE_LINKER_FLAGS": "-static"
+      }
+    },
+    {
       "name": "macos-base",
       "hidden": true,
+      "description": "Base configure preset using vcpkg for MacOS",
       "inherits": "vcpkg-base",
       "condition": {
         "type": "equals",
@@ -60,6 +118,7 @@
     {
       "name": "macos-arm64",
       "hidden": true,
+      "description": "Base configure preset using vcpkg for MacOS ARM64",
       "inherits": "macos-base",
       "cacheVariables": {
         "VCPKG_TARGET_TRIPLET": "arm64-osx",
@@ -69,8 +128,29 @@
       }
     },
     {
+      "name": "macos-arm64-release",
+      "displayName": "MacOS ARM64 Release",
+      "description": "Release build using vcpkg for MacOS ARM64",
+      "binaryDir": "${sourceDir}/build/mac-arm64-Release",
+      "inherits": ["macos-arm64"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "macos-arm64-debug",
+      "displayName": "MacOS ARM64 Debug",
+      "description": "Debug build using vcpkg for MacOS ARM64",
+      "binaryDir": "${sourceDir}/build/mac-arm64-Debug",
+      "inherits": ["macos-arm64"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
       "name": "macos-x64",
       "hidden": true,
+      "description": "Base configure preset using vcpkg for MacOS x64",
       "inherits": "macos-base",
       "cacheVariables": {
         "VCPKG_TARGET_TRIPLET": "x64-osx",
@@ -80,8 +160,29 @@
       }
     },
     {
+      "name": "macos-x64-release",
+      "displayName": "MacOS x64 Release",
+      "description": "Release build using vcpkg for MacOS x64",
+      "binaryDir": "${sourceDir}/build/mac-x64-Release",
+      "inherits": ["macos-x64"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "macos-x64-debug",
+      "displayName": "MacOS x64 Debug",
+      "description": "Debug build using vcpkg for MacOS x64",
+      "binaryDir": "${sourceDir}/build/mac-x64-Debug",
+      "inherits": ["macos-x64"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
       "name": "mingw-cross-base",
       "hidden": true,
+      "description": "Base configuration preset for cross-compiling Windows builds using MinGW-w64 on Linux",
       "inherits": "vcpkg-base",
       "condition": {
         "type": "equals",
@@ -101,116 +202,6 @@
         "VCPKG_INSTALLED_DIR": "${sourceDir}/../vcpkg_installed/mingw",
         "OPENSSL_ROOT_DIR": "${sourceDir}/../vcpkg_installed/mingw/x64-mingw-static",
         "ENABLE_MONGODB": "OFF"
-      }
-    },
-    {
-      "name": "mingw-native-base",
-      "hidden": true,
-      "inherits": "vcpkg-base",
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Windows"
-      },
-      "cacheVariables": {
-        "CMAKE_C_COMPILER": "gcc",
-        "CMAKE_CXX_COMPILER": "g++",
-        "VCPKG_TARGET_TRIPLET": "x64-mingw-static",
-        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchain/mingw64.cmake",
-        "VCPKG_INSTALLED_DIR": "${sourceDir}/../vcpkg_installed/mingw",
-        "ENABLE_MONGODB": "OFF"
-      }
-    },
-    {
-      "name": "release",
-      "displayName": "Release",
-      "description": "Release build using vcpkg",
-      "binaryDir": "${sourceDir}/build/linux-Release",
-      "inherits": ["linux-base"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
-      "name": "debug",
-      "displayName": "Debug",
-      "description": "Debug build using vcpkg",
-      "binaryDir": "${sourceDir}/build/linux-Debug",
-      "inherits": ["linux-base"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
-      }
-    },
-    {
-      "name": "relwithdebinfo",
-      "displayName": "RelWithDebInfo",
-      "description": "Optimized build with debug symbols for profiling",
-      "binaryDir": "${sourceDir}/build/linux-RelWithDebInfo",
-      "inherits": ["linux-base"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
-      }
-    },
-    {
-      "name": "windows-release",
-      "displayName": "Windows Release",
-      "description": "Release build for Windows",
-      "binaryDir": "${sourceDir}/build/windows-Release",
-      "inherits": ["windows-base"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_EXE_LINKER_FLAGS": "-static"
-      }
-    },
-    {
-      "name": "windows-debug",
-      "displayName": "Windows Debug",
-      "description": "Debug build for Windows",
-      "binaryDir": "${sourceDir}/build/windows-Debug",
-      "inherits": ["windows-base"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_EXE_LINKER_FLAGS": "-static"
-      }
-    },
-    {
-      "name": "macos-arm64-release",
-      "displayName": "macOS ARM64 Release",
-      "description": "Release build for macOS ARM64",
-      "binaryDir": "${sourceDir}/build/mac-arm64-Release",
-      "inherits": ["macos-arm64"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
-      "name": "macos-arm64-debug",
-      "displayName": "macOS ARM64 Debug",
-      "description": "Debug build for macOS ARM64",
-      "binaryDir": "${sourceDir}/build/mac-arm64-Debug",
-      "inherits": ["macos-arm64"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
-      }
-    },
-    {
-      "name": "macos-x64-release",
-      "displayName": "macOS x64 Release",
-      "description": "Release build for macOS x64",
-      "binaryDir": "${sourceDir}/build/mac-x64-Release",
-      "inherits": ["macos-x64"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
-      "name": "macos-x64-debug",
-      "displayName": "macOS x64 Debug",
-      "description": "Debug build for macOS x64",
-      "binaryDir": "${sourceDir}/build/mac-x64-Debug",
-      "inherits": ["macos-x64"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
@@ -234,9 +225,28 @@
       }
     },
     {
+      "name": "mingw-native-base",
+      "hidden": true,
+      "description": "Base configuration preset for native Windows builds using MinGW-w64",
+      "inherits": "vcpkg-base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++",
+        "VCPKG_TARGET_TRIPLET": "x64-mingw-static",
+        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchain/mingw64.cmake",
+        "VCPKG_INSTALLED_DIR": "${sourceDir}/../vcpkg_installed/mingw",
+        "ENABLE_MONGODB": "OFF"
+      }
+    },
+    {
       "name": "windows-mingw-release",
       "displayName": "Windows MinGW Native Release",
-      "description": "Native Windows build using MinGW-w64",
+      "description": "Native Release build for Windows using MinGW-w64",
       "binaryDir": "${sourceDir}/build/windows-mingw-Release",
       "inherits": ["mingw-native-base"],
       "cacheVariables": {
@@ -246,7 +256,7 @@
     {
       "name": "windows-mingw-debug",
       "displayName": "Windows MinGW Native Debug",
-      "description": "Native Windows Debug build using MinGW-w64",
+      "description": "Native Debug build for Windows using MinGW-w64",
       "binaryDir": "${sourceDir}/build/windows-mingw-Debug",
       "inherits": ["mingw-native-base"],
       "cacheVariables": {
@@ -258,84 +268,100 @@
     {
       "name": "release",
       "configurePreset": "release",
-      "displayName": "Release Build"
+      "displayName": "Release Build",
+      "jobs": 12
     },
     {
       "name": "debug",
       "configurePreset": "debug",
-      "displayName": "Debug Build"
+      "displayName": "Debug Build",
+      "jobs": 12
     },
     {
       "name": "relwithdebinfo",
       "configurePreset": "relwithdebinfo",
-      "displayName": "RelWithDebInfo Build"
+      "displayName": "RelWithDebInfo Build",
+      "jobs": 12
     },
     {
       "name": "windows-release",
       "configurePreset": "windows-release",
-      "displayName": "Windows Release Build"
+      "displayName": "Windows Release Build",
+      "jobs": 12
     },
     {
       "name": "windows-debug",
       "configurePreset": "windows-debug",
-      "displayName": "Windows Debug Build"
+      "displayName": "Windows Debug Build",
+      "jobs": 12
     },
     {
       "name": "macos-arm64-release",
       "configurePreset": "macos-arm64-release",
-      "displayName": "macOS ARM64 Release Build"
+      "displayName": "macOS ARM64 Release Build",
+      "jobs": 12
     },
     {
       "name": "macos-arm64-debug",
       "configurePreset": "macos-arm64-debug",
-      "displayName": "macOS ARM64 Debug Build"
+      "displayName": "macOS ARM64 Debug Build",
+      "jobs": 12
     },
     {
       "name": "macos-x64-release",
       "configurePreset": "macos-x64-release",
-      "displayName": "macOS x64 Release Build"
+      "displayName": "macOS x64 Release Build",
+      "jobs": 12
     },
     {
       "name": "macos-x64-debug",
       "configurePreset": "macos-x64-debug",
-      "displayName": "macOS x64 Debug Build"
+      "displayName": "macOS x64 Debug Build",
+      "jobs": 12
     },
     {
       "name": "windows-cross-release",
       "configurePreset": "windows-cross-release",
-      "displayName": "Windows Cross-compile Release Build"
+      "displayName": "Windows Cross-compile Release Build",
+      "jobs": 12
     },
     {
       "name": "windows-cross-debug",
       "configurePreset": "windows-cross-debug",
-      "displayName": "Windows Cross-compile Debug Build"
+      "displayName": "Windows Cross-compile Debug Build",
+      "jobs": 12
     },
     {
       "name": "windows-mingw-release",
       "configurePreset": "windows-mingw-release",
-      "displayName": "Windows MinGW Native Release Build"
+      "displayName": "Windows MinGW Native Release Build",
+      "jobs": 12
     },
     {
       "name": "windows-mingw-debug",
       "configurePreset": "windows-mingw-debug",
-      "displayName": "Windows MinGW Native Debug Build"
+      "displayName": "Windows MinGW Native Debug Build",
+      "jobs": 12
     },
     {
       "name": "make_otl_blq",
       "configurePreset": "release",
       "displayName": "Build make_otl_blq (NetCDF ocean tide loading)",
+      "jobs": 12,
       "targets": ["make_otl_blq"]
     },
     {
       "name": "interpolate_loading",
       "configurePreset": "release",
       "displayName": "Build interpolate_loading (NetCDF loading interpolation)",
+      "jobs": 12,
       "targets": ["interpolate_loading"]
     },
     {
       "name": "netcdf-programs",
       "configurePreset": "release",
       "displayName": "Build all NetCDF programs",
+      "jobs": 12,
       "targets": ["make_otl_blq", "interpolate_loading"]
     }
   ]

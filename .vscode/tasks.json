@@ -1,0 +1,122 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "clean-ginan-build",
+            "detail": "Delete all CMake configurations within the build directory",
+            "type": "shell",
+            "command": "rm -rf build/*",
+            "options": {
+                "cwd": "${workspaceFolder}/src"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "cmake-configure-ginan-debug",
+            "detail": "Configure ginan with the preset `debug`",
+            "type": "shell",
+            "command": "cmake --preset debug",
+            "options": {
+                "cwd": "${workspaceFolder}/src"
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "cmake-configure-ginan-release",
+            "detail": "Configure ginan with the preset `release`",
+            "type": "shell",
+            "command": "cmake --preset release",
+            "options": {
+                "cwd": "${workspaceFolder}/src"
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "cmake-build-ginan-debug",
+            "detail": "Build ginan with the preset `debug`",
+            "type": "shell",
+            "command": "cmake --build --preset debug",
+            "options": {
+                "cwd": "${workspaceFolder}/src"
+            },
+            "dependsOn": "cmake-configure-ginan-debug",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "cmake-build-ginan-release",
+            "detail": "Build ginan with the preset `release`",
+            "type": "shell",
+            "command": "cmake --build --preset release",
+            "options": {
+                "cwd": "${workspaceFolder}/src"
+            },
+            "dependsOn": "cmake-configure-ginan-release",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "run-pea-without-build",
+            "detail": "Run existing pea binary without building",
+            "type": "shell",
+            "command": "${workspaceFolder}/bin/pea",
+            "args": [
+                "${input:peaOptions}"
+            ],
+            "options": {
+                "cwd": "${input:peaRunDir}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "run-pea-with-build-debug",
+            "detail": "Run new pea binary after a `debug` build",
+            "type": "shell",
+            "command": "${workspaceFolder}/bin/pea",
+            "args": [
+                "${input:peaOptions}"
+            ],
+            "options": {
+                "cwd": "${input:peaRunDir}"
+            },
+            "dependsOn": "cmake-build-ginan-debug",
+            "dependsOrder": "sequence",
+            "problemMatcher": []
+        },
+        {
+            "label": "run-pea-with-build-release",
+            "detail": "Run new pea binary after a `release` build",
+            "type": "shell",
+            "command": "${workspaceFolder}/bin/pea",
+            "args": [
+                "${input:peaOptions}"
+            ],
+            "options": {
+                "cwd": "${input:peaRunDir}"
+            },
+            "dependsOn": "cmake-build-ginan-release",
+            "dependsOrder": "sequence",
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "peaOptions",
+            "type": "promptString",
+            "description": "List of options for pea",
+            "default": "--help"
+        },
+        {
+            "id": "peaRunDir",
+            "type": "promptString",
+            "description": "Directory to run pea in",
+            "default": "${workspaceFolder}"
+        }
+    ]
+}
